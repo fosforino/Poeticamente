@@ -8,7 +8,7 @@ from datetime import datetime
 
 # --- CONFIGURAZIONE DATABASE (SUPABASE) ---
 URL_SUPABASE = "https://eeavavlfgeeusijiljfw.supabase.co"
-KEY_SUPABASE = ""
+KEY_SUPABASE = " "
 
 # --- LOGICA BACKEND ---
 
