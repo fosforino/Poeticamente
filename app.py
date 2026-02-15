@@ -7,8 +7,8 @@ from fpdf import FPDF
 from datetime import datetime
 
 # --- CONFIGURAZIONE DATABASE (SUPABASE) ---
-URL_SUPABASE = "https://eeavavlfgeeusijiljfw.supabase.co"
-KEY_SUPABASE = " "
+URL_SUPABASE = st.secrets["SUPABASE_URL"]
+KEY_SUPABASE = st.secrets["SUPABASE_KEY"]
 
 # --- LOGICA BACKEND ---
 
