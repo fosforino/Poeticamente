@@ -1,82 +1,84 @@
 import streamlit as st
-import random
-import time
+import os
 from supabase import create_client, Client
 
-# --- 1. CONNESSIONE DATABASE ---
-URL_SUPABASE = st.secrets["SUPABASE_URL"]
-KEY_SUPABASE = st.secrets["SUPABASE_KEY"]
-supabase: Client = create_client(URL_SUPABASE, KEY_SUPABASE)
+# 1. SETUP DELLA PAGINA
+st.set_page_config(page_title="Poeticamente", page_icon="📝", layout="centered")
 
-# --- 2. CONFIGURAZIONE PAGINA ED ESTETICA ---
-st.set_page_config(page_title="Poeticamente", page_icon="✍️", layout="wide")
+# 2. STILE ESTETICO (CSS) - Scritto per evitare ogni errore di indentazione
+st.markdown("""
+<style>
+.main { background-color: #fcfaf7; }
+.stButton>button { width: 100%; border-radius: 20px; border: 1px solid #d4af37; background-color: white; color: #d4af37; height: 3em; }
+.stButton>button:hover { background-color: #d4af37; color: white; }
+.poesia-card { padding: 25px; border-left: 4px solid #d4af37; background-color: white; margin-bottom: 25px; border-radius: 0 10px 10px 0; box-shadow: 3px 3px 10px rgba(0,0,0,0.05); }
+h1, h2, h3 { color: #4a4a4a; font-family: 'Georgia', serif; }
+</style>
+""", unsafe_allow_html=True)
+
+# 3. TITOLO E AVVISO PUBBLICO
 st.title("Poeticamente")
-st.warning("🚧 Stiamo lavorando per voi: Poeticamente è attualmente in fase Beta Privata. L'accesso è riservato agli autori autorizzati.")
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=EB+Garamond&display=swap');
-    .stApp { background-color: #f5eedc; background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png"); }
-    [data-testid="stSidebar"] { background-color: #f0f2f6 !important; }
-    .poesia-card {
-        background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #d4af37;
-        margin-bottom: 15px; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); font-family: 'EB Garamond', serif;
-    }
-    </style>
-    """, unsafe_allow_code_html=True)
+st.warning("🚧 **Area in Manutenzione**: L'accesso alla fase Beta è riservato agli utenti autorizzati.")
 
-# --- 3. BARRA LATERALE (NAVIGAZIONE E INFO) ---
-st.sidebar.title("Poeticamente")   
-if 'user_email' in st.session_state:
-    st.sidebar.write(f"Poeta: **{st.session_state.user_email}**")
+# 4. CONNESSIONE AL DATABASE
+@st.cache_resource
+def init_connection():
+    try:
+        if "SUPABASE_URL" in st.secrets:
+            return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+        return None
+    except Exception:
+        return None
 
-menu = st.sidebar.radio("Spostati in:", ["Lo Scrittoio", "La Bacheca Pubblica", "Gestisci Opere"])
+supabase = init_connection()
 
-# Spazio informativo Beta
-st.sidebar.markdown("---")
-st.sidebar.caption("🚀 **Versione 0.1-Beta**")
-st.sidebar.info("L'app è in fase di rifinitura. I tuoi versi sono preziosi e protetti.")
+# 5. LOGICA DI LOGIN
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-if st.sidebar.button("Esci"):
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
-    st.rerun()
-
-# --- LOGIN SIMBOLICO (In attesa di Auth reale) ---
-if 'logged_in' not in st.session_state:
-    st.title("Poeticamente")
-    email = st.text_input("Inserisci la tua Email")
-    codice = st.text_input("Codice (123456)", type="password")
-    if st.button("Entra nella tua Stanza"):
-        if codice == "123456": # Placeholder per futura sicurezza
-            st.session_state.logged_in = True
-            st.session_state.user_email = email
-            st.rerun()
-        else:
-            st.error("Codice errato")
-    st.stop()
-
-# --- LOGICA DELLE SEZIONI (Placeholder) ---
-if menu == "Lo Scrittoio":
-    st.subheader("✍️ Crea o Modifica")
-    titolo = st.text_input("Titolo")
-    testo = st.text_area("Scrivi qui...", height=300)
-    if st.button("SALVA SU POETICAMENTE"):
-        data = {"titolo": titolo, "contenuto": testo, "autore": st.session_state.user_email}
-        supabase.table("poesie").insert(data).execute()
-        st.success("Versi custoditi con successo!")
-
-elif menu == "La Bacheca Pubblica":
-    st.subheader("📜 Opere della Community")
-    res = supabase.table("poesie").select("*").execute()
-    for p in res.data:
-        st.markdown(f"""<div class='poesia-card'><h3>{p['titolo']}</h3><p>{p['contenuto']}</p>
-                    <small>Scritto da: {p['autore']}</small></div>""", unsafe_allow_code_html=True)
-
-elif menu == "Gestisci Opere":
-    st.subheader("🛠️ La tua Stanza Privata")
-    res = supabase.table("poesie").select("*").eq("autore", st.session_state.user_email).execute()
-    for p in res.data:
-        with st.expander(f"{p['titolo']}"):
-            st.write(p['contenuto'])
-            if st.button("Elimina", key=p['id']):
-                supabase.table("poesie").delete().eq("id", p['id']).execute()
+if not st.session_state.logged_in:
+    st.markdown("### 🔐 Identificazione Autore")
+    with st.form("login_form"):
+        email = st.text_input("Inserisci la tua Email")
+        access_code = st.text_input("Codice di Accesso", type="password")
+        if st.form_submit_button("Entra nello Scrittoio"):
+            if access_code == "123456":
+                st.session_state.logged_in = True
                 st.rerun()
+            else:
+                st.error("Codice non autorizzato.")
+else:
+    # 6. APP DOPO IL LOGIN
+    st.sidebar.title("Menu")
+    if st.sidebar.button("Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
+    
+    tab1, tab2 = st.tabs(["✍️ Scrittoio", "📖 La Bacheca"])
+    
+    with tab1:
+        st.subheader("Crea un nuovo componimento")
+        titolo = st.text_input("Titolo dell'opera")
+        contenuto = st.text_area("I tuoi versi", height=300)
+        
+        if st.button("Pubblica nel Mondo"):
+            if supabase and titolo and contenuto:
+                try:
+                    supabase.table("poesie").insert({"titolo": titolo, "contenuto": contenuto}).execute()
+                    st.success("L'opera è stata pubblicata.")
+                except Exception as e:
+                    st.error(f"Errore: {e}")
+            else:
+                st.warning("Verifica i campi e la connessione.")
+
+    with tab2:
+        st.subheader("Opere Recenti")
+        if supabase:
+            try:
+                response = supabase.table("poesie").select("*").order("created_at", desc=True).execute()
+                for p in response.data:
+                    st.markdown(f'<div class="poesia-card"><h3>{p["titolo"]}</h3><p style="white-space: pre-wrap;">{p["contenuto"]}</p></div>', unsafe_allow_html=True)
+            except Exception:
+                st.error("Errore nel caricamento.")
+        else:
+            st.info("Bacheca disponibile solo online.")
