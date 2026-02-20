@@ -10,7 +10,7 @@ supabase: Client = create_client(URL_SUPABASE, KEY_SUPABASE)
 
 # --- 2. CONFIGURAZIONE PAGINA ED ESTETICA ---
 st.set_page_config(page_title="Poeticamente", page_icon="✍️", layout="wide")
-
+st.warning("⚠️ Lavori in corso: l'accesso alla versione Beta è momentaneamente riservato.")
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=EB+Garamond&display=swap');
