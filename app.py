@@ -10,8 +10,8 @@ supabase: Client = create_client(URL_SUPABASE, KEY_SUPABASE)
 
 # --- 2. CONFIGURAZIONE PAGINA ED ESTETICA ---
 st.set_page_config(page_title="Poeticamente", page_icon="✍️", layout="wide")
-st.warning("⚠️ Lavori in corso: l'accesso alla versione Beta è momentaneamente riservato.")
-st.markdown("""
+st.title("Poeticamente")
+st.warning("🚧 Stiamo lavorando per voi: Poeticamente è attualmente in fase Beta Privata. L'accesso è riservato agli autori autorizzati.")
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=EB+Garamond&display=swap');
     .stApp { background-color: #f5eedc; background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png"); }
@@ -24,7 +24,7 @@ st.markdown("""
     """, unsafe_allow_code_html=True)
 
 # --- 3. BARRA LATERALE (NAVIGAZIONE E INFO) ---
-st.sidebar.title("Poeticamente")
+st.sidebar.title("Poeticamente")   
 if 'user_email' in st.session_state:
     st.sidebar.write(f"Poeta: **{st.session_state.user_email}**")
 
