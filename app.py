@@ -1,118 +1,84 @@
 import streamlit as st
-import os
-from supabase import create_client, Client
+import random
+import time
 
-# 1. SETUP DELLA PAGINA
-st.set_page_config(page_title="Poeticamente", page_icon="📝", layout="centered")
+# --- CONFIGURAZIONE FISCALE E BRAND ---
+NOME_APP = "Poeticamente"
+MODALITA_COMMERCIALE = False  # Cambiare in True solo dopo apertura P.IVA
 
-# 2. STILE ESTETICO (CSS)
-st.markdown("""
-<style>
-.main { background-color: #fcfaf7; }
-.stButton>button { width: 100%; border-radius: 20px; border: 1px solid #d4af37; background-color: white; color: #d4af37; height: 3em; }
-.stButton>button:hover { background-color: #d4af37; color: white; }
-.poesia-card { padding: 25px; border-left: 4px solid #d4af37; background-color: white; margin-bottom: 25px; border-radius: 0 10px 10px 0; box-shadow: 3px 3px 10px rgba(0,0,0,0.05); }
-h1, h2, h3 { color: #4a4a4a; font-family: 'Georgia', serif; }
-</style>
-""", unsafe_allow_html=True)
+# --- LOGICA DI SICUREZZA E TEST (DIETRO LE QUINTE) ---
+def registra_interesse_nel_db(funzione, email):
+    # Qui il codice simula il salvataggio. 
+    # Quando collegheremo Supabase, i dati andranno nella tabella "Interesse_Premium"
+    time.sleep(1) # Simula caricamento professionale
+    return True
 
-# 3. TITOLO
-st.title("Poeticamente")
+# --- INTERFACCIA UTENTE ---
+st.set_page_config(page_title=NOME_APP, page_icon="🖋️", layout="wide")
 
-# 4. CONNESSIONE AL DATABASE
-@st.cache_resource
-def init_connection():
-    try:
-        if "SUPABASE_URL" in st.secrets:
-            return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-        return None
-    except Exception:
-        return None
+# Sidebar
+st.sidebar.title(f"✨ {NOME_APP}")
+st.sidebar.info("Versione: 1.0.0-Beta (Sperimentale)")
+profilo = st.sidebar.selectbox("Tipo Profilo", ["Curioso (Free)", "Ambizioso (Premium)"])
 
-supabase = init_connection()
+# Header
+st.title(f"Benvenuto su {NOME_APP}")
+st.subheader("La tua opera merita una firma eterna.")
 
-# 5. LOGICA DI LOGIN
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+# --- AREA EDITOR ---
+st.divider()
+col_scrittura, col_strumenti = st.columns([2, 1])
 
-if not st.session_state.logged_in:
-    st.warning("🚧 Area in Manutenzione: accesso riservato.")
-    with st.form("login_form"):
-        email = st.text_input("Email")
-        access_code = st.text_input("Codice di Accesso", type="password")
-        if st.form_submit_button("Entra nello Scrittoio"):
-            if access_code == "123456":
-                st.session_state.logged_in = True
-                st.rerun()
-            else:
-                st.error("Codice errato.")
-else:
-    # 6. APP DOPO IL LOGIN
-    st.sidebar.title("Menu")
-    if st.sidebar.button("Logout"):
-        st.session_state.logged_in = False
-        st.rerun()
+with col_scrittura:
+    titolo_opera = st.text_input("Titolo della tua opera", placeholder="Es: Il risveglio dei versi")
+    testo_opera = st.text_area("Componi qui", height=400, placeholder="Scrivi i tuoi versi...")
+
+with col_strumenti:
+    st.markdown("### 🛠️ Strumenti Professionali")
     
-    tab1, tab2 = st.tabs(["✍️ Scrittoio", "📖 La Bacheca"])
+    # Feature Gating: mostriamo i servizi ma li blocchiamo per testare i clic
+    st.button("🎨 Font Editoriali (Premium)", use_container_width=True, on_click=lambda: st.session_state.update({"click_premium": "Font Editoriali"}))
     
-    with tab1:
-        st.subheader("Crea un nuovo componimento")
-        titolo = st.text_input("Titolo dell'opera")
-        contenuto = st.text_area("I tuoi versi", height=300)
-        tag_scelti = st.text_input("Etichette", placeholder="#Amore #Vita #Natura")
-        if st.button("Pubblica nel Mondo"):
-            if supabase and titolo and contenuto:
-                try:
-                    # Corretto: Tabella "Poesie" e colonna "versi" come da database
-                    supabase.table("Poesie").insert({
-                        "titolo": titolo, 
-                        "versi": contenuto, 
-                        "tag": tag_scelti
-                    }).execute()
-                    st.success("L'opera è stata pubblicata!")
-                    st.balloons()
-                except Exception as e:
-                    st.error(f"Errore: {e}")
+    st.button("🖋️ Firma Digitale Legale (Premium)", use_container_width=True, on_click=lambda: st.session_state.update({"click_premium": "Firma Digitale"}))
+    
+    st.button("📧 Certificato via Email (Premium)", use_container_width=True, on_click=lambda: st.session_state.update({"click_premium": "Invio Certificato"}))
+
+# --- LOGICA SMOKE TEST (IL FILTRO) ---
+if "click_premium" in st.session_state:
+    st.divider()
+    with st.container():
+        st.warning(f"### 🚀 Funzione '{st.session_state.click_premium}' in fase di rilascio")
+        st.write("""
+            Per garantirti la massima **tutela legale e fiscale**, stiamo attivando le procedure di certificazione. 
+            Non vogliamo passi falsi: il servizio sarà disponibile a breve con garanzia di valore giudiziario.
+        """)
+        
+        # Il CAPTCHA Logico
+        if 'n1' not in st.session_state:
+            st.session_state.n1 = random.randint(1, 10)
+            st.session_state.n2 = random.randint(1, 10)
+            st.session_state.risultato_corretto = st.session_state.n1 + st.session_state.n2
+
+        col_mail, col_captcha = st.columns(2)
+        with col_mail:
+            email_interessato = st.text_input("Tienimi informato (tua email):")
+        with col_captcha:
+            risposta_captcha = st.number_input(f"Sei umano? Quanto fa {st.session_state.n1} + {st.session_state.n2}?", step=1)
+
+        if st.button("Inseriscimi nella lista d'attesa prioritaria"):
+            if risposta_captcha == st.session_state.risultato_corretto:
+                if email_interessato:
+                    successo = registra_interesse_nel_db(st.session_state.click_premium, email_interessato)
+                    if successo:
+                        st.success("Ottimo! Ti abbiamo inserito tra i 'Poeti Fondatori'. Riceverai una notifica al lancio.")
+                        # Reset per evitare spam
+                        del st.session_state.click_premium
+                        del st.session_state.n1
+                else:
+                    st.error("Inserisci un'email valida.")
             else:
-                st.warning("Compila tutti i campi.")
+                st.error("Errore di sicurezza. Il calcolo non è corretto.")
 
-    with tab2:
-        st.subheader("Opere Recenti")
-        if supabase:
-            try:
-                # Recupero dati aggiornato
-                response = supabase.table("Poesie").select("*").order("created_at", desc=True).execute()
-
-                for p in response.data:
-                    # 1. Parte superiore (Titolo e Versi)
-                    st.markdown(f"""
-                    <div class="poesia-card">
-                        <h3>{p['titolo']}</h3>
-                        <p style="white-space: pre-wrap;">{p['versi']}</p>
-                    """, unsafe_allow_html=True)
-
-                    # 2. Sezione Tag (Solo se esistono)
-                    if p.get('tag'):
-                        st.write(f"🏷️ **{p['tag']}**")
-
-                    # 3. Chiusura Card e Autore
-                    st.markdown(f"""
-                        <p style="color: #888; font-size: 0.8em;">Autore: {p.get('autore', 'Anonimo')}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                    # 4. Riga con Like
-                    col_like, col_count = st.columns([1, 4])
-                    with col_like:
-                        if st.button("❤️", key=f"like_{p['id']}"):
-                            nuovi_likes = (p.get('likes') or 0) + 1
-                            supabase.table("Poesie").update({"likes": nuovi_likes}).eq("id", p['id']).execute()
-                            st.rerun()
-
-                    with col_count:
-                        st.write(f"{p.get('likes') or 0} apprezzamenti")
-                    
-                    st.divider()
-
-            except Exception as e:
-                st.error(f"Errore nel caricamento: {e}")
+# --- FOOTER ---
+st.divider()
+st.caption(f"© 2026 {NOME_APP} | Ricerca di mercato attiva | Nessun dato fiscale richiesto in questa fase.")
