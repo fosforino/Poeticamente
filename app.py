@@ -59,7 +59,7 @@ else:
         st.subheader("Crea un nuovo componimento")
         titolo = st.text_input("Titolo dell'opera")
         contenuto = st.text_area("I tuoi versi", height=300)
-        
+        tag_scelti = st.text_input("Etichette", placeholder="#Amore #Vita #Natura")
         if st.button("Pubblica nel Mondo"):
             if supabase and titolo and contenuto:
                 try:
@@ -67,6 +67,7 @@ else:
                     supabase.table("Poesie").insert({
                         "titolo": titolo, 
                         "versi": contenuto 
+                        "tag": tag_scelti
                     }).execute()
                     st.success("L'opera è stata pubblicata!")
                     st.balloons()
