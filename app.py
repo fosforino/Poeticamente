@@ -82,35 +82,37 @@ else:
             try:
                 # Recupero dati aggiornato
                 response = supabase.table("Poesie").select("*").order("created_at", desc=True).execute()
-                
+
                 for p in response.data:
-                    # Visualizzazione della poesia
-            # 1. Parte superiore (Titolo e Versi)
-            st.markdown(f"""
-            <div class="poesia-card">
-                <h3>{p['titolo']}</h3>
-                <p style="white-space: pre-wrap;">{p['versi']}</p>
-            """, unsafe_allow_html=True)
+                    # 1. Parte superiore (Titolo e Versi)
+                    st.markdown(f"""
+                    <div class="poesia-card">
+                        <h3>{p['titolo']}</h3>
+                        <p style="white-space: pre-wrap;">{p['versi']}</p>
+                    """, unsafe_allow_html=True)
 
-            # 2. Sezione Tag (Solo se esistono)
-            if p.get('tag'):
-                st.write(f"🏷️ **{p['tag']}**")
+                    # 2. Sezione Tag (Solo se esistono)
+                    if p.get('tag'):
+                        st.write(f"🏷️ **{p['tag']}**")
 
-            # 3. Chiusura Card e Autore
-            st.markdown(f"""
-                <p style="color: #888; font-size: 0.8em;">Autore: {p.get('autore', 'Anonimo')}</p>
-            </div>
-            """, unsafe_allow_html=True)
+                    # 3. Chiusura Card e Autore
+                    st.markdown(f"""
+                        <p style="color: #888; font-size: 0.8em;">Autore: {p.get('autore', 'Anonimo')}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-            # 4. Riga con Like
-            col_like, col_count = st.columns([1, 4])
-            with col_like:
-                if st.button("❤️", key=f"like_{p['id']}"):
-                    nuovi_likes = (p.get('likes') or 0) + 1
-                    supabase.table("Poesie").update({"likes": nuovi_likes}).eq("id", p['id']).execute()
-                    st.rerun()
+                    # 4. Riga con Like
+                    col_like, col_count = st.columns([1, 4])
+                    with col_like:
+                        if st.button("❤️", key=f"like_{p['id']}"):
+                            nuovi_likes = (p.get('likes') or 0) + 1
+                            supabase.table("Poesie").update({"likes": nuovi_likes}).eq("id", p['id']).execute()
+                            st.rerun()
 
-            with col_count:
-                st.write(f"{p.get('likes') or 0} apprezzamenti")
-            
-            st.divider()
+                    with col_count:
+                        st.write(f"{p.get('likes') or 0} apprezzamenti")
+                    
+                    st.divider()
+
+            except Exception as e:
+                st.error(f"Errore nel caricamento: {e}")
