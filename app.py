@@ -3,59 +3,71 @@ import random
 import time
 import streamlit.components.v1 as components
 
-# --- CONFIGURAZIONE BRAND ---
-NOME_APP = "Poeticamente"
-PREZZO_MENSILE = "20€"
-LIMITE_DEMO = 3
+# --- 1. CONFIGURAZIONE ESTETICA "ATELIER" ---
+st.set_page_config(page_title="Poeticamente", page_icon="🖋️", layout="wide", initial_sidebar_state="collapsed")
 
-# --- 1. ESTETICA "STELLATA" (CSS & DESIGN) ---
-st.set_page_config(page_title=NOME_APP, page_icon="🖋️", layout="wide", initial_sidebar_state="collapsed")
-
-st.markdown(f"""
+# CSS Avanzato per forzare l'eleganza del Club
+st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lora:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
     
-    .stApp {{ background-color: #fdfcfb; color: #2c3e50; font-family: 'Lora', serif; }}
-    
-    .poetic-title {{ 
-        font-family: 'Playfair Display', serif; 
-        font-size: 3.5rem; 
-        text-align: center; 
-        color: #1a1a1a; 
-        margin-bottom: 0.5rem; 
-    }}
-    
-    /* Messaggio di Cortesia Premium */
-    .welcome-club {{
-        background-color: #ffffff;
-        border: 1px solid #d4af37;
-        padding: 15px;
-        border-radius: 8px;
+    /* Sfondo e Font Generale */
+    .stApp {
+        background-color: #fdfcfb !important;
+        color: #1a1a1a !important;
+        font-family: 'Lora', serif !important;
+    }
+
+    /* Titolo Centrale Elegante */
+    .poetic-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
         text-align: center;
-        font-style: italic;
         color: #1a1a1a;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }}
+        margin-top: -50px;
+        padding-bottom: 10px;
+    }
 
-    .premium-badge {{ 
-        background-color: #d4af37; 
-        color: white; 
-        padding: 5px 15px; 
-        border-radius: 20px; 
-        font-size: 0.8rem; 
-        font-weight: bold; 
-        text-transform: uppercase; 
-    }}
+    /* MESSAGGIO DI CORTESIA CLUB PREMIUM */
+    .welcome-club {
+        background-color: #ffffff;
+        border: 1px solid #d4af37 !important;
+        padding: 25px;
+        border-radius: 2px; /* Linee più squadrate e professionali */
+        text-align: center;
+        font-family: 'Lora', serif !important;
+        font-style: italic;
+        font-size: 1.2rem;
+        color: #1a1a1a;
+        margin: 20px auto;
+        max-width: 800px;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+    }
 
-    .stTextArea textarea {{ 
-        background-color: transparent !important; 
-        border: 1px solid #e0e0e0 !important; 
-        border-radius: 10px !important; 
-        font-size: 1.2rem !important; 
-    }}
-    
-    #MainMenu, footer, header {{visibility: hidden;}}
+    /* Personalizzazione Input e Bottoni */
+    .stTextInput input, .stTextArea textarea {
+        background-color: #ffffff !important;
+        border: 1px solid #e0e0e0 !important;
+        font-family: 'Lora', serif !important;
+        font-size: 1.1rem !important;
+    }
+
+    .stButton button {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+        border-radius: 0px !important;
+        border: none !important;
+        font-family: 'Playfair Display', serif !important;
+        transition: all 0.3s ease;
+    }
+
+    .stButton button:hover {
+        background-color: #d4af37 !important;
+        color: #ffffff !important;
+    }
+
+    /* Nascondi elementi Streamlit */
+    #MainMenu, footer, header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
@@ -69,75 +81,70 @@ def contiene_linguaggio_vietato(testo):
     termini_vietati = ["anarchia", "insurrezione", "sovvertire", "abbasso lo stato", "disordine pubblico"]
     return any(term in testo.lower() for term in termini_vietati)
 
-# --- 3. PAYWALL (DOPO 3 PROVE) ---
-if st.session_state.conteggio_demo >= LIMITE_DEMO and not st.session_state.abbonato:
-    st.markdown("<h1 class='poetic-title'>L'Esclusività ha un Valore</h1>", unsafe_allow_html=True)
-    st.divider()
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.markdown("<div style='text-align: center; font-size: 5rem;'>🏛️</div>", unsafe_allow_html=True)
+# --- 3. PAYWALL (BLOCCO DOPO 3 PROVE) ---
+if st.session_state.conteggio_demo >= 3 and not st.session_state.abbonato:
+    st.markdown("<h1 class='poetic-title'>Poeticamente</h1>", unsafe_allow_html=True)
+    st.markdown("<div class='welcome-club'>Il tuo percorso demo nel Club è terminato. Per continuare a pubblicare e accedere alle funzioni esclusive, attiva il tuo profilo PREMIUM.</div>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        st.subheader("Il tuo percorso demo è terminato.")
-        st.write(f"Per continuare a far parte del nostro club e accedere alle funzioni editoriali avanzate, attiva il tuo abbonamento.")
-        st.markdown(f"**Investimento: {PREZZO_MENSILE}/mese**")
-        
         accetta = st.checkbox("Accetto i Termini di Servizio (Neutralità politica e tutela della proprietà)")
-        if st.button("Sottoscrivi e Continua"):
+        if st.button("ACCEDI AL LIVELLO PREMIUM - 20€/MESE", use_container_width=True):
             if accetta:
                 st.session_state.abbonato = True
                 st.rerun()
     st.stop()
 
-# --- 4. DESKTOP DI SCRITTURA ---
-st.markdown(f"<h1 class='poetic-title'>{NOME_APP}</h1>", unsafe_allow_html=True)
+# --- 4. INTERFACCIA DESKTOP ---
+st.markdown("<h1 class='poetic-title'>Poeticamente</h1>", unsafe_allow_html=True)
 
-# MESSAGGIO DI CORTESIA (EVIDENZIATO SOLO PER I NON ANCORA ABBONATI)
+# Messaggio di cortesia visibile solo se non abbonato
 if not st.session_state.abbonato:
     st.markdown("""
         <div class='welcome-club'>
             Benvenuto nel club dei poeti e scrittori, se il nostro sito ti affascina, accedi alle funzioni esclusive PREMIUM.
         </div>
     """, unsafe_allow_html=True)
-else:
-    st.markdown("<p style='text-align: center;'><span class='premium-badge'>Membro del Club</span></p>", unsafe_allow_html=True)
 
 col_scrittura, col_strumenti = st.columns([2, 1])
 
 with col_scrittura:
-    titolo = st.text_input("Titolo dell'opera", placeholder="Titolo...")
-    testo = st.text_area("I tuoi versi", height=400, placeholder="Inizia a comporre...")
+    titolo = st.text_input("Titolo dell'opera", placeholder="Inserisci il titolo...")
+    testo = st.text_area("Componi i tuoi versi", height=400, placeholder="L'ispirazione attende...")
     
     if contiene_linguaggio_vietato(testo):
-        st.warning("⚠️ Nota del Club: Il linguaggio rilevato non è conforme alla nostra Policy di decoro e neutralità.")
+        st.warning("⚠️ Nota del Club: Il linguaggio rilevato non rispetta la Policy di decoro e neutralità.")
 
 with col_strumenti:
-    st.markdown("### 🏛️ Atelier")
+    st.markdown("### 🏛️ L'Atelier")
     if testo:
-        # Metrica semplificata per il test
         sillabe = len(testo.split('\n')[-1].strip()) // 2
-        st.metric("Metrica Verso", f"{sillabe} sillabe")
+        st.metric("Metrica stimata", f"{sillabe} sillabe")
     
     st.divider()
-    if st.button("🚀 PUBBLICA OPERA", type="primary", use_container_width=True):
+    st.info(f"Prove demo effettuate: {st.session_state.conteggio_demo}/3")
+    
+    if st.button("🚀 PUBBLICA OPERA", use_container_width=True):
         if contiene_linguaggio_vietato(testo):
-            st.error("Violazione Policy: Contenuto non pubblicabile.")
+            st.error("Violazione Policy: Contenuto non compatibile con gli standard del Club.")
         elif not testo:
-            st.warning("L'inchiostro è ancora nel calamaio...")
+            st.warning("Inserisci del testo prima di pubblicare.")
         else:
-            with st.spinner("Registrazione opera nel Registro Fondatori..."):
+            with st.spinner("Registrazione nel Registro dei Poeti..."):
                 time.sleep(1.5)
                 st.session_state.conteggio_demo += 1
-                st.success("Opera registrata!")
+                st.success(f"Opera n.{st.session_state.conteggio_demo} pubblicata!")
                 time.sleep(1)
                 st.rerun()
 
-# --- 5. JS TOCCo DI CLASSE ---
+# --- 5. JS PER IL TOCCO DI CLASSE ---
 components.html("""
 <script>
     const area = window.parent.document.querySelectorAll('textarea')[0];
+    area.style.border = 'none';
+    area.style.borderBottom = '2px solid #d4af37';
     area.addEventListener('focus', () => {
-        area.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.2)';
-        area.style.borderColor = '#d4af37';
+        area.style.backgroundColor = '#fffaf0';
     });
 </script>
 """, height=0)
