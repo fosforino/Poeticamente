@@ -1,5 +1,10 @@
+# Sicurezza chiavi Supabase
 .streamlit/secrets.toml
+
+# Ambiente Virtuale (Python 3.12)
 venv/
 .venv/
+
+# Cache e residui Python 3.14
 __pycache__/
 *.pyc
