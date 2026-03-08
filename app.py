@@ -16,6 +16,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- FUNZIONE LOGOUT ---
+def esegui_logout():
+    # Rimuove tutti i dati dalla sessione
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.rerun()
+
 # --- GESTIONE ACCESSO ---
 if "utente" not in st.session_state:
     st.session_state.utente = None
@@ -46,12 +53,15 @@ if st.session_state.utente is None:
 else:
     # --- NAVIGAZIONE ---
     st.sidebar.title(f"Poeta: {st.session_state.utente}")
-    if st.sidebar.button("Logout"):
-        st.session_state.utente = None
-        st.rerun()
-        
+    
     page = st.sidebar.radio("Vai a:", ["Home", "Scrittoio", "Bacheca"])
 
+    # --- PULSANTE LOGOUT IN FONDO ALLA SIDEBAR ---
+    st.sidebar.markdown("---")
+    if st.sidebar.button("Esci da Poeticamente", help="Chiudi la sessione e torna al login"):
+        esegui_logout()
+
+    # --- CARICAMENTO PAGINE ---
     if page == "Home": Home.show()
     elif page == "Scrittoio": Scrittoio.show()
     elif page == "Bacheca": Bacheca.show()
