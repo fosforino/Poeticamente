@@ -41,37 +41,23 @@ def apply_global_style():
 
         /* Bottoni Stile Antico (Inchiostro su Carta) */
         div.stButton > button { 
-            background-color: #4b3621 !important; 
-            color: #fdf5e6 !important; 
-            border: 1px solid #d4af37 !important; 
+            background-color: #4b3621 !important; /* Marrone Fondente */
+            color: #fdf5e6 !important;            /* Testo Crema Chiaro - ORA RISALTA */
+            border: 1px solid #d4af37 !important; /* Bordo Oro */
             font-family: 'Playfair Display', serif !important; 
+            font-weight: 600 !important;
+            font-size: 1.1rem !important;
             border-radius: 4px !important;
             padding: 0.5rem 2rem !important;
+            width: 100% !important;               /* Occupa tutto lo spazio */
             transition: 0.3s all ease;
         }
         
         div.stButton > button:hover {
-            background-color: #2b1d0e !important;
-            border-color: #fdf5e6 !important;
-            transform: scale(1.02);
-        }
-
-        /* Nascondi Elementi Standard Streamlit */
-        #MainMenu, footer, header {visibility: hidden;}
-        
-        /* PULIZIA SIDEBAR: Nasconde il menu "app" automatico */
-        [data-testid="stSidebarNav"] {display: none !important;}
-
-        /* Box Codice d'Onore */
-        .codice-onore { 
-            background-color: #f4ece0; 
-            padding: 20px; 
-            border-left: 5px solid #d4af37; 
-            border-radius: 4px;
-            font-style: italic; 
-            margin: 20px 0; 
-            color: #5d4037;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            background-color: #d4af37 !important; /* Diventa Oro al passaggio */
+            color: #2b1d0e !important;            /* Testo Scuro per contrasto */
+            border-color: #4b3621 !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         /* Input Fields personalizzati */
