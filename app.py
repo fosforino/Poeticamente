@@ -108,7 +108,7 @@ if not st.session_state.authenticated:
     with col_logo_2:
         if os.path.exists(path_icona):
             # Corretto use_container_width con width="stretch" per evitare l'avviso
-            st.image(path_icona, width=None) 
+            st.image(path_icona) 
     
     st.markdown("<h1 class='poetic-title'>Poeticamente</h1>", unsafe_allow_html=True)
     
