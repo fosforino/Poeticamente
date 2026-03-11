@@ -66,6 +66,12 @@ def apply_global_style():
             font-style: italic;
             margin: 15px 0;
         }
+
+        /* Trucco per fondere il logo centrale con la pergamena */
+        .blend-logo img {
+            mix-blend-mode: multiply;
+            filter: contrast(110%);
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -81,6 +87,10 @@ def apply_login_background(image_path):
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
+            }}
+            /* Nascondi sidebar durante il login */
+            [data-testid="stSidebar"] {{
+                display: none;
             }}
             </style>
             """,
@@ -100,15 +110,16 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    # Applichiamo lo sfondo sfocato solo qui
     apply_login_background(path_icona)
 
     # --- SCHERMATA DI LOGIN ---
     col_logo_1, col_logo_2, col_logo_3 = st.columns([1, 0.8, 1])
     with col_logo_2:
         if os.path.exists(path_icona):
-            # Corretto use_container_width con width="stretch" per evitare l'avviso
-            st.image(path_icona) 
+            # Inseriamo il logo dentro un div con la classe 'blend-logo'
+            st.markdown('<div class="blend-logo">', unsafe_allow_html=True)
+            st.image(path_icona)
+            st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("<h1 class='poetic-title'>Poeticamente</h1>", unsafe_allow_html=True)
     
@@ -144,19 +155,20 @@ if not st.session_state.authenticated:
                 st.error("L'accesso è negato. Verifica la Chiave o la sfida.")
     st.stop()
 
-# --- INTERFACCIA PRINCIPALE ---
+# --- INTERFACCIA PRINCIPALE (Appare solo dopo il login) ---
 with st.sidebar:
     if os.path.exists(path_icona):
         st.image(path_icona, width=150)
     st.markdown(f"<h2 style='text-align: center;'>Poeta:<br>{st.session_state.utente}</h2>", unsafe_allow_html=True)
     st.markdown("---")
+    
+    page = st.sidebar.radio("Scegli la tua meta:", ["Home", "Scrittoio", "Bacheca"])
+    
+    st.sidebar.markdown("<br><br>", unsafe_allow_html=True)
+    if st.sidebar.button("Congeda il Profilo"):
+        esegui_logout()
 
-page = st.sidebar.radio("Scegli la tua meta:", ["Home", "Scrittoio", "Bacheca"])
-
-st.sidebar.markdown("<br><br>", unsafe_allow_html=True)
-if st.sidebar.button("Congeda il Profilo"):
-    esegui_logout()
-
+# Caricamento Pagine
 if page == "Home": 
     Home.show()
 elif page == "Scrittoio": 
