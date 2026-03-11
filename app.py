@@ -1,7 +1,8 @@
 import streamlit as st
 from Pages import Home, Scrittoio, Bacheca
+import os
 
-# --- CONFIGURAZIONE STREAMLIT (Sempre al primo posto) ---
+# --- CONFIGURAZIONE STREAMLIT ---
 st.set_page_config(
     page_title="Poeticamente", 
     page_icon="🖋️", 
@@ -13,84 +14,96 @@ st.set_page_config(
 def apply_global_style():
     st.markdown("""
     <style>
-        /* Importazione Font Eleganti */
+        /* Importazione Font */
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
-        /* Sfondo Pergamena Totale (App e Sidebar) */
+        /* Sfondo Pergamena Totale */
         .stApp, [data-testid="stSidebar"] { 
             background-color: #fdf5e6 !important; 
-            color: #2b1d0e !important; 
+            color: #3e2723 !important; 
             font-family: 'EB Garamond', serif !important; 
         }
 
-        /* Testi della Sidebar */
-        [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] p {
-            color: #4b3621 !important;
-            font-family: 'Playfair Display', serif !important;
+        /* Sidebar Styling */
+        [data-testid="stSidebarContent"] {
+            background-color: #f5f1e8 !important;
+            border-right: 1px solid #d7ccc8;
         }
 
-        /* Titolo Poetico Login */
+        /* Titolo Poetico */
         .poetic-title { 
             font-family: 'Playfair Display', serif; 
-            font-size: 4rem; 
+            font-size: 3.5rem; 
             text-align: center; 
-            color: #2b1d0e; 
-            margin-top: -20px;
-            margin-bottom: 20px;
+            color: #3e2723; 
+            margin-top: -10px;
+            margin-bottom: 10px;
         }
 
-        /* Bottoni Stile Antico (Inchiostro su Carta) */
+        /* Bottoni Inchiostro e Oro */
         div.stButton > button { 
-            background-color: #4b3621 !important; 
-            color: #ffffff !important;            /* BIANCO PURO per coerenza totale */
-            border: 1px solid #d4af37 !important; 
+            background-color: #3e2723 !important; 
+            color: #fdf5e6 !important; 
+            border: 1px solid #c19a6b !important; 
             font-family: 'Playfair Display', serif !important; 
-            font-weight: 600 !important;
-            font-size: 1.1rem !important;
-            border-radius: 4px !important;
-            padding: 0.5rem 2rem !important;
-            width: 100% !important;
             transition: 0.3s all ease;
+            border-radius: 8px !important;
         }
         
         div.stButton > button:hover {
-            background-color: #d4af37 !important; 
-            color: #2b1d0e !important;            
-            border-color: #4b3621 !important;
+            background-color: #c19a6b !important; 
+            color: #3e2723 !important; 
+            border-color: #3e2723 !important;
         }
 
-        /* Forza il bianco anche per i paragrafi interni al bottone */
-        div.stButton > button p {
-            color: #ffffff !important;
+        /* Codice d'Onore Box */
+        .codice-onore {
+            background-color: #f5f1e8;
+            padding: 15px;
+            border-left: 5px solid #3e2723;
+            border-radius: 4px;
+            font-style: italic;
+            margin: 15px 0;
+        }
+
+        /* Centrare le immagini */
+        .centered-image {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
     </style>
     """, unsafe_allow_html=True)
 
-# --- FUNZIONE LOGOUT ---
 def esegui_logout():
     for key in list(st.session_state.keys()):
         del st.session_state[key]
     st.rerun()
 
-# --- ESECUZIONE STILE ---
 apply_global_style()
 
-# --- GESTIONE ACCESSO (IL BUTTAFUORI) ---
+# Verifica se l'immagine esiste (rinominala come 'logo.png' o carica il tuo file)
+path_icona = "image_eda7ff.png" 
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    # --- PAGINA DI LOGIN / IDENTIFICAZIONE ---
-    st.markdown("<h1 class='poetic-title'>Poeticamente 🖋️</h1>", unsafe_allow_html=True)
+    # --- SCHERMATA DI LOGIN ---
+    col_logo_1, col_logo_2, col_logo_3 = st.columns([1, 0.8, 1])
+    with col_logo_2:
+        if os.path.exists(path_icona):
+            st.image(path_icona, use_container_width=True)
     
-    col_mid_1, col_mid_2, col_mid_3 = st.columns([1, 2, 1])
+    st.markdown("<h1 class='poetic-title'>Poeticamente</h1>", unsafe_allow_html=True)
+    
+    col_mid_1, col_mid_2, col_mid_3 = st.columns([1, 1.5, 1])
     
     with col_mid_2:
-        st.markdown("<h3 style='text-align: center;'>Identificazione del Poeta</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; font-family: Playfair Display;'>Identificazione del Poeta</h3>", unsafe_allow_html=True)
         
-        # Campi Identità
         nuovo_pseudo = st.text_input("Scegli il tuo Pseudonimo:")
-        password_segreta = st.text_input("Chiave d'Accesso:", type="password") # Blindatura tecnica
+        password_segreta = st.text_input("Chiave d'Accesso:", type="password")
         
         st.markdown("""
         <div class='codice-onore'>
@@ -101,12 +114,9 @@ if not st.session_state.authenticated:
         """, unsafe_allow_html=True)
         
         accetto_codice = st.checkbox("Giuro solennemente di rispettarlo")
-        
-        st.markdown("---")
-        st.write("#### Sfida di Verità")
         captcha_input = st.text_input("Completa il verso: 'Nel mezzo del cammin di nostra...'")
 
-        if st.button("Entra nello Scrittoio", use_container_width=True):
+        if st.button("Entra nello Scrittoio"):
             if (nuovo_pseudo.strip() and 
                 password_segreta == "Ermetico_2026" and 
                 accetto_codice and 
@@ -116,22 +126,24 @@ if not st.session_state.authenticated:
                 st.session_state.utente = nuovo_pseudo.strip()
                 st.rerun()
             else:
-                st.error("L'accesso è negato. Verifica la Chiave o risolvi correttamente la sfida.")
-    
+                st.error("L'accesso è negato. Verifica la Chiave o la sfida.")
     st.stop()
 
-# --- INTERFACCIA PRINCIPALE (CARICATA SOLO SE AUTHENTICATED == TRUE) ---
-st.sidebar.markdown(f"<h2 style='text-align: center;'>Poeta:<br>{st.session_state.utente}</h2>", unsafe_allow_html=True)
-st.sidebar.markdown("---")
+# --- INTERFACCIA PRINCIPALE ---
+# Mostra l'icona anche nella sidebar
+with st.sidebar:
+    if os.path.exists(path_icona):
+        st.image(path_icona, width=150)
+    st.markdown(f"<h2 style='text-align: center;'>Poeta:<br>{st.session_state.utente}</h2>", unsafe_allow_html=True)
+    st.markdown("---")
 
 page = st.sidebar.radio("Scegli la tua meta:", ["Home", "Scrittoio", "Bacheca"])
 
-# --- PULSANTE LOGOUT ---
 st.sidebar.markdown("<br><br>", unsafe_allow_html=True)
-if st.sidebar.button("Congeda il Profilo", use_container_width=True):
+if st.sidebar.button("Congeda il Profilo"):
     esegui_logout()
 
-# --- CARICAMENTO PAGINE DINAMICO ---
+# Caricamento Pagine
 if page == "Home": 
     Home.show()
 elif page == "Scrittoio": 
