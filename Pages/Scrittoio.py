@@ -1,19 +1,13 @@
-# VERSIONE FINALE ALLINEATA - POETICAMENTE
 import streamlit as st
 from supabase import create_client
 
 def show():
-    # Estetica Poematica
+    # Stile per i bottoni colorati
     st.markdown("""
         <style>
-        .stApp { background-color: #f5f5dc; }
-        h1, h2, h3, p, label { font-family: 'Georgia', serif; color: #2c3e50; }
-        div.stButton > button {
-            background-color: #708238 !important; /* Verde Salvia */
-            color: white !important;
-            border-radius: 10px;
-            border: none;
-        }
+        div.stButton > button[key="btn_salva"] { background-color: #708238 !important; color: white !important; border-radius: 20px !important; }
+        div.stButton > button[key="btn_stampa"] { background-color: #3498db !important; color: white !important; border-radius: 20px !important; }
+        div.stButton > button[key="btn_cancella"] { background-color: #e74c3c !important; color: white !important; border-radius: 20px !important; }
         </style>
         """, unsafe_allow_html=True)
 
@@ -21,15 +15,15 @@ def show():
     key = st.secrets["SUPABASE_KEY"]
     supabase = create_client(url, key)
 
-    if "user" in st.session_state:
-        user_id = st.session_state.user.id
+    if "utente" in st.session_state:
+        nome_poeta = st.session_state.utente
         st.title("✒️ Lo Scrittoio")
 
+        # Recupero opere dell'utente
         try:
-            res = supabase.table("Opere").select("*").eq("user_id", user_id).order("creato_il", desc=True).execute()
+            res = supabase.table("Opere").select("*").eq("autore_email", nome_poeta).order("creato_il", desc=True).execute()
             opere = res.data
-        except Exception as e:
-            st.error(f"Errore DB: {e}")
+        except:
             opere = []
 
         scelta = st.sidebar.selectbox("Carica opera:", ["Nuova Opera"] + [o['titolo'] for o in opere])
@@ -39,27 +33,41 @@ def show():
         v_testo = opera_corrente['contenuto'] if opera_corrente else ""
         v_cat = opera_corrente.get('categoria', "Poesia") if opera_corrente else "Poesia"
 
-        col1, col2 = st.columns([2, 1])
-        with col1:
+        col_t, col_c = st.columns([2, 1])
+        with col_t:
             titolo = st.text_input("Titolo", value=v_titolo)
-        with col2:
+        with col_c:
             cats = ["Poesia", "Romanzo", "Filastrocca", "Narrazione", "Opera Teatrale", "Canzone"]
             idx = cats.index(v_cat) if v_cat in cats else 0
             categoria = st.selectbox("Categoria", cats, index=idx)
 
         contenuto = st.text_area("Versi", value=v_testo, height=400)
 
-        if st.button("💾 Salva nel Registro"):
-            dati = {"user_id": user_id, "titolo": titolo, "contenuto": contenuto, "categoria": categoria, "autore_email": st.session_state.user.email}
-            if opera_corrente:
-                supabase.table("Opere").update(dati).eq("id", opera_corrente['id']).execute()
-            else:
-                supabase.table("Opere").insert(dati).execute()
-            st.success("Opera salvata!")
-            st.rerun()
-    else:
-        st.warning("Accedi dalla Home.")
+        # Riga dei Bottoni
+        st.write("---")
+        b1, b2, b3, b4 = st.columns([1, 1, 1, 1])
 
-if __name__ == "__main__":
-    show()
-    # Test di sincronizzazione
+        with b1:
+            if st.button("💾 Salva", key="btn_salva"):
+                if titolo:
+                    dati = {"titolo": titolo, "contenuto": contenuto, "categoria": categoria, "autore_email": nome_poeta}
+                    if opera_corrente:
+                        supabase.table("Opere").update(dati).eq("id", opera_corrente['id']).execute()
+                    else:
+                        supabase.table("Opere").insert(dati).execute()
+                    st.success("Salvato!")
+                    st.rerun()
+                else:
+                    st.warning("Manca il titolo.")
+
+        with b2:
+            if st.button("🖨️ Stampa", key="btn_stampa"):
+                st.markdown("<script>window.print();</script>", unsafe_allow_html=True)
+
+        with b3:
+            if opera_corrente:
+                if st.button("🗑️ Elimina", key="btn_cancella"):
+                    supabase.table("Opere").delete().eq("id", opera_corrente['id']).execute()
+                    st.rerun()
+    else:
+        st.warning("Identificati nella Home.")
