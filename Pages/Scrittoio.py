@@ -2,10 +2,10 @@ import streamlit as st
 from supabase import create_client
 
 def show():
-    # --- STILE 3D REALE E COERENTE ---
+    # --- IL TUO STILE 3D REALE ---
     st.markdown("""
         <style>
-        /* Sfondo Pergamena (per coerenza con la Home) */
+        /* Sfondo Pergamena Uniforme */
         .stApp {
             background: #f4ecd8 url("https://www.transparenttextures.com/patterns/parchment.png") !important;
         }
@@ -63,7 +63,7 @@ def show():
         </style>
         """, unsafe_allow_html=True)
 
-    # --- LOGICA DI CONNESSIONE E FUNZIONI ---
+    # --- LOGICA DI CONNESSIONE ---
     url = st.secrets["SUPABASE_URL"]
     key = st.secrets["SUPABASE_KEY"]
     supabase = create_client(url, key)
@@ -72,14 +72,12 @@ def show():
         nome_poeta = st.session_state.utente
         st.markdown(f"<h1 style='text-align: center; color: #3e2723;'>✒️ Lo Scrittoio di {nome_poeta}</h1>", unsafe_allow_html=True)
 
-        # Recupero opere dal database
         try:
             res = supabase.table("Opere").select("*").eq("autore_email", nome_poeta).order("creato_il", desc=True).execute()
             opere = res.data
         except:
             opere = []
 
-        # Interfaccia di caricamento
         scelta = st.sidebar.selectbox("📖 Carica opera:", ["Nuova Opera"] + [o['titolo'] for o in opere])
         opera_corrente = next((o for o in opere if o['titolo'] == scelta), None)
         
@@ -87,7 +85,6 @@ def show():
         v_testo = opera_corrente['contenuto'] if opera_corrente else ""
         v_cat = opera_corrente.get('categoria', "Poesia") if opera_corrente else "Poesia"
 
-        # Campi input
         col_t, col_c = st.columns([2, 1])
         with col_t:
             titolo = st.text_input("Titolo dell'Opera", value=v_titolo)
@@ -99,7 +96,6 @@ def show():
         contenuto = st.text_area("Versi e Pensieri", value=v_testo, height=400)
 
         st.write("---")
-        # Bottoni d'azione
         b1, b2, b3 = st.columns([1, 1, 1])
 
         with b1:
