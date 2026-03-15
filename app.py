@@ -1,5 +1,5 @@
 import streamlit as st
-from Pages import Home, Scrittoio, Bacheca
+from pages import Home, Scrittoio, Bacheca, Archivio
 import os
 import base64
 
@@ -124,7 +124,7 @@ with st.sidebar:
         st.image(path_icona, width=150)
     st.markdown(f"<h2 style='text-align: center; color: #3e2723;'>Poeta:<br>{st.session_state.utente}</h2>", unsafe_allow_html=True)
     st.markdown("---")
-    page = st.radio("Scegli la tua meta:", ["Home", "Scrittoio", "Bacheca"])
+    page = st.sidebar.radio("Scegli la tua meta:", ["Home", "Scrittoio", "Bacheca", "Archivio"])
     st.markdown("---")
     if st.button("Congeda il Profilo"):
         esegui_logout()
@@ -136,3 +136,5 @@ elif page == "Scrittoio":
     Scrittoio.show()
 elif page == "Bacheca": 
     Bacheca.show()
+elif page == "Archivio":
+    Archivio.show()
