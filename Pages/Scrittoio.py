@@ -136,15 +136,28 @@ def show():
         with b1:
             if st.button("💾 Custodisci", key="btn_salva"):
                 if titolo:
-                    dati = {"titolo": titolo, "contenuto": contenuto, "categoria": categoria, "autore_email": nome_poeta}
-                    if opera_corrente:
-                        supabase.table("Opere").update(dati).eq("id", opera_corrente['id']).execute()
-                    else:
-                        supabase.table("Opere").insert(dati).execute()
-                    st.success("Versi salvati.")
-                    st.rerun()
+                    try:
+                        dati = {
+                            "titolo": titolo, 
+                            "contenuto": contenuto, 
+                            "categoria": categoria, 
+                            "autore_email": nome_poeta
+                        }
+                        
+                        if opera_corrente:
+                            # Se l'opera esiste già, la aggiorna
+                            supabase.table("Opere").update(dati).eq("id", opera_corrente['id']).execute()
+                        else:
+                            # Altrimenti ne crea una nuova
+                            supabase.table("Opere").insert(dati).execute()
+                        
+                        st.success("Versi salvati nel tempo.")
+                        st.rerun()
+                    except Exception as e:
+                        # Se c'è un errore (tipo Secrets mancanti), l'app non muore
+                        st.error(f"Il calamaio ha un intoppo tecnico. Verifica i Secrets.")
                 else:
-                    st.warning("Manca il titolo.")
+                    st.warning("Manca il titolo, l'opera non può essere battezzata.")
 
         with b2:
             # Qui usiamo FPDF per il download diretto
