@@ -95,8 +95,8 @@ def show():
     supabase = create_client(url, key)
 
     try:
-        # Recupero ultime 20 opere (usando i nomi colonne corretti dello Scrittoio)
-        res = supabase.table("Opere").select("*").order("creato_il", desc=True).limit(20).execute()
+        # RECUPERO OPERE: 'created_at' è il nome corretto della tua colonna data
+        res = supabase.table("Opere").select("*").order("created_at", desc=True).limit(20).execute()
         poemi = res.data if res.data else []
 
         if not poemi:
@@ -107,20 +107,25 @@ def show():
         
         with col_m_2:
             for p in poemi:
+                # Usiamo 'versi' e 'autore' che sono i nomi reali su Supabase
+                testo_poesia = p.get('versi', 'Testo mancante')
+                autore_poesia = p.get('autore', 'Poeta Anonimo')
+                categoria_poesia = p.get('categoria', 'Poesia')
+                
                 st.markdown(
                     f"""
                     <div class="poesia-card">
                         <div class="titolo-poesia">{p['titolo']}</div>
-                        <div style='color: #c19a6b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;'>{p.get('categoria', 'Poesia')}</div>
-                        <div class="versi-testo">{p['contenuto']}</div>
-                        <div class="firma-autore">Affisso dal Poeta: {p['autore_email']}</div>
+                        <div style='color: #c19a6b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;'>{categoria_poesia}</div>
+                        <div class="versi-testo">{testo_poesia}</div>
+                        <div class="firma-autore">Affisso dal Poeta: {autore_poesia}</div>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
                 
     except Exception as e:
-        st.error(f"Il calamaio della bacheca è momentaneamente asciutto.")
+        st.error(f"Il calamaio della bacheca ha un intoppo: {e}")
 
 if __name__ == "__main__":
     show()
