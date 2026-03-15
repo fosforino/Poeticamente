@@ -19,63 +19,63 @@ def get_base64_image(image_path):
 
 def apply_global_style(image_path):
     img_base64 = get_base64_image(image_path)
-    img_html = ""
+    
+    # 1. Iniettiamo prima l'immagine come HTML puro (fuori dallo stile)
     if img_base64:
-        # Questo crea l'icona SFOCATA e GIGANTE sullo sfondo (Filigrana)
-        img_html = f"""
-        <img src="data:image/png;base64,{img_base64}" class="bg-watermark">
-        """
+        st.markdown(f"""
+            <img src="data:image/png;base64,{img_base64}" class="bg-watermark">
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
+    # 2. Poi iniettiamo il CSS
+    st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
-        /* SFONDO PERGAMENA INCRESPATA */
-        .stApp {{ 
-            background-color: #fdf5e6;
-            background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png");
+        /* SFONDO PERGAMENA */
+        .stApp { 
+            background-color: #fdf5e6 !important;
+            background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png") !important;
             color: #3e2723 !important; 
             font-family: 'EB Garamond', serif !important; 
-        }}
+        }
 
-        /* L'ICONA POETICAMENTE COME FILIGRANA */
-        .bg-watermark {{
+        /* FILIGRANA SFOCATA */
+        .bg-watermark {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 70vw;
-            opacity: 0.07; /* Appena visibile */
-            filter: blur(8px); /* Effetto sfocato */
+            opacity: 0.07;
+            filter: blur(8px);
             z-index: -1;
             pointer-events: none;
-        }}
+        }
 
         /* MENU E BOTTONI */
-        div[data-baseweb="select"] > div {{
+        div[data-baseweb="select"] > div {
             background-color: #fdf5e6 !important;
             border: 1px solid #3e2723 !important;
             border-radius: 8px;
-        }}
+        }
         
-        div.stButton > button {{ 
+        div.stButton > button { 
             background-color: #3e2723 !important; 
             color: #fdf5e6 !important; 
             border: 1px solid #c19a6b !important; 
             font-family: 'Playfair Display', serif !important; 
             border-radius: 8px !important;
             transition: 0.3s all ease;
-        }}
+        }
         
-        .poetic-title {{ 
+        .poetic-title { 
             font-family: 'Playfair Display', serif; 
             font-size: 4rem; 
             text-align: center; 
             color: #3e2723; 
-            margin-top: -50px;
-        }}
+            margin-top: -20px;
+        }
     </style>
-    {img_html}
     """, unsafe_allow_html=True)
 
 def esegui_logout():
@@ -92,7 +92,7 @@ if "authenticated" not in st.session_state:
 
 # --- LOGICA DI ACCESSO ---
 if not st.session_state.authenticated:
-    # Mostriamo l'icona nitida solo nel login, sopra la filigrana
+    # Mostriamo l'icona nitida solo nel login
     col_logo_1, col_logo_2, col_logo_3 = st.columns([1, 0.6, 1])
     with col_logo_2:
         if os.path.exists(path_icona):
@@ -130,6 +130,9 @@ with st.sidebar:
         esegui_logout()
 
 # --- NAVIGAZIONE PAGINE ---
-if page == "Home": Home.show()
-elif page == "Scrittoio": Scrittoio.show()
-elif page == "Bacheca": Bacheca.show()
+if page == "Home": 
+    Home.show()
+elif page == "Scrittoio": 
+    Scrittoio.show()
+elif page == "Bacheca": 
+    Bacheca.show()
