@@ -67,3 +67,97 @@ header { visibility: hidden; }
     background-color: rgba(255, 255, 255, 0.5) !important;
     border: 1px solid #d7ccc8 !important;
 }
+
+/* --- SEZIONE PREMIO: IL MEDAGLIONE --- */
+.medaglione-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.medaglione-bronzo {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    /* Bordo che simula il metallo del bronzo */
+    border: 8px solid #b87333; 
+    /* Ombra esterna profonda e riflesso interno */
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.2);
+    /* Animazione fluida al passaggio del mouse */
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.medaglione-bronzo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* La pergamena con il messaggio d'onore */
+.pergamena-premio {
+    background: rgba(255, 252, 242, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #d7ccc8;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 650px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* --- SEZIONE PREMIO SCENOGRAFICA --- */
+.medaglione-3d-container {
+    perspective: 1000px; /* Crea la profondità 3D */
+    width: 300px;
+    height: 300px;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.medaglione-bronzo-3d {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    /* Bordo che simula il metallo del bronzo con riflesso lucido */
+    border: 8px solid #b87333; 
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.3);
+    /* Animazione di rotazione infinita */
+    animation: rotazione-medaglione 15s linear infinite;
+}
+
+/* Animazione di rotazione su se stessa (asse Y) */
+@keyframes rotazione-medaglione {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+
+/* La pergamena con la dedica in pompa magna */
+.pergamena-dedica {
+    background: rgba(255, 253, 248, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    border: 3px solid #d7ccc8;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    max-width: 700px;
+    margin: 30px auto;
+    text-align: center;
+    position: relative; /* Per posizionare il "by fosforino" */
+}
+
+/* Caratteri corsivi e sobri per il ringraziamento finale */
+.firma-fosforino {
+    font-family: 'Aura', cursive; /* Usa un carattere corsivo elegante */
+    color: #a1887f;
+    font-size: 1.1rem;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-style: italic;
+}

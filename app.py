@@ -52,7 +52,7 @@ if not st.session_state.authenticated:
         st.markdown("<h1 style='text-align: center; color: #3e2723; font-family: \"Playfair Display\";'>Poeticamente</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; font-style: italic; font-size: 1.2rem; color: #795548; margin-top: -20px;'>Dove il pensiero si fa inchiostro</p>", unsafe_allow_html=True)
         
-        st.markdown("### Identificazione del Poeta")
+        st.markdown("<h3 style='text-align: center; color: #3e2723; margin-top: 10px;'>Id Poeta</h3>", unsafe_allow_html=True)
         nuovo_pseudo = st.text_input("Pseudonimo")
         password_segreta = st.text_input("Chiave d'Accesso", type="password")
         accetto_codice = st.checkbox("Giuro solennemente di rispettare il Codice d'Onore")
