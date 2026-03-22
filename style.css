@@ -1,45 +1,74 @@
-/* style.css - Versione Oro Alchemico e 3D Fix */
+/* style.css - ARCHITETTURA DEFINITIVA: VORTICE MILLENARIO E GRAVITAZIONALE */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
-/* Sfondo Oro Radiale */
+/* --- 1. BASE: TEXTURE PERGAMENA ANTICA --- */
 .stApp { 
-    background: radial-gradient(circle, #fff8e1 0%, #fbc02d 100%) !important;
+    /* Modificato in .jpg per corrispondere al tuo file */
+    background-image: url("https://raw.githubusercontent.com/fosforino/Poeticamente/main/Texture_Pergamena.jpg") !important;
+    background-size: cover !important; 
+    background-position: center !important; 
+    background-attachment: fixed; 
+    background-repeat: no-repeat !important;
+    
+    /* Mix di colori per rendere la pergamena più "bruciata" e profonda */
+    background-color: #7b5e4d !important; 
+    background-blend-mode: multiply;
+    
     color: #3e2723 !important; 
     font-family: 'EB Garamond', serif !important; 
 }
 
-/* Filigrana Poeticamente.png */
-[data-testid="stAppViewContainer"] {
-    background-image: url("https://raw.githubusercontent.com/fosforino/Poeticamente/main/Poeticamente.png") !important;
-    background-attachment: fixed;
-    background-repeat: no-repeat !important;
-    background-size: cover !important; 
-    background-position: center !important; 
-    background-blend-mode: multiply;
-    background-color: rgba(184, 115, 51, 0.4);
+/* --- 2. IL VORTICE DELLE LETTERE (INTANGIBILE) --- */
+.vortex-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0; 
+    pointer-events: none; 
 }
 
-/* Header silenziati */
-[data-testid="stHeader"], .main { background: transparent !important; }
-header { visibility: hidden; }
-
-/* Titolo ID */
-.titolo-id {
+.lettera-vortice {
+    position: absolute;
     font-family: 'Playfair Display', serif;
-    color: #3e2723;
-    text-align: left !important;
-    margin-top: 50px;
-    font-size: 3.5rem;
-    letter-spacing: 10px;
-    text-shadow: 2px 2px 8px rgba(62, 39, 35, 0.3);
+    font-weight: 600;
+    color: rgba(62, 39, 35, 0.15); 
+    
+    /* BLOCO SELEZIONE: Il tuo suggerimento prezioso */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    
+    backface-visibility: hidden;
+    pointer-events: none;
+    animation: fluttua-gravita 20s ease-in-out infinite; 
 }
 
-/* --- MOTORE 3D MEDAGLIONE --- */
+.lettera-vortice.piccola { font-size: 1.2rem; opacity: 0.1; }
+.lettera-vortice.media { font-size: 2.5rem; opacity: 0.2; }
+.lettera-vortice.grande { font-size: 4rem; opacity: 0.05; }
+
+@keyframes fluttua-gravita {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(15px, -20px) rotate(5deg); }
+    50% { transform: translate(-15px, 15px) rotate(-5deg); }
+    75% { transform: translate(20px, 10px) rotate(3deg); }
+}
+
+/* --- 3. IL MEDAGLIONE 3D (CENTRO GRAVITAZIONALE) --- */
 .medaglione-3d-container {
+    z-index: 10; 
+    position: relative;
     perspective: 1000px;
     width: 300px;
     height: 300px;
     margin: 50px auto;
+    
+    /* EFFETTO SALTO 3D: Ombra più profonda e sfocata per staccare dal fondo */
+    filter: drop-shadow(0px 25px 45px rgba(0,0,0,0.65));
 }
 
 .card-3d {
@@ -59,12 +88,10 @@ header { visibility: hidden; }
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
-.fronte { transform: rotateY(0deg); background: transparent; }
-.retro-immagine { transform: rotateY(180deg); background: transparent; }
+.fronte { transform: rotateY(0deg); }
+.retro-immagine { transform: rotateY(180deg); }
 
 .faccia img {
     width: 100%;
@@ -77,25 +104,43 @@ header { visibility: hidden; }
     to { transform: rotateY(360deg); }
 }
 
-/* --- PERGAMENA DEDICA --- */
+/* --- 4. PERGAMENA DEDICA E TITOLI --- */
+.titolo-id {
+    font-family: 'Playfair Display', serif;
+    color: #3e2723;
+    text-align: center;
+    margin-top: 50px;
+    font-size: 3rem;
+    letter-spacing: 5px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
 .pergamena-dedica {
-    background: rgba(255, 253, 248, 0.95);
+    /* Fondo carta avorio quasi coprente per leggibilità */
+    background: rgba(255, 253, 248, 0.94); 
     padding: 40px;
-    border-radius: 20px;
-    border: 2px solid #d7ccc8;
-    max-width: 700px;
-    margin: 30px auto;
+    border-radius: 15px;
+    border: 1px solid #d7ccc8;
+    max-width: 650px;
+    margin: 40px auto;
     text-align: center;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 11;
 }
 
 .firma-fosforino {
-    font-family: 'Brush Script MT', 'Brush Script Std', cursive !important;
+    font-family: 'Brush Script MT', cursive !important;
     color: #a1887f;
     position: absolute;
     bottom: 15px;
     right: 25px;
-    font-size: 2rem !important;
-    font-style: italic;
+    font-size: 1.8rem !important;
 }
+
+/* Pulizia UI Streamlit */
+[data-testid="stAppViewContainer"] {
+    background: transparent !important;
+}
+[data-testid="stHeader"] { background: transparent !important; }
+header { visibility: hidden; }
