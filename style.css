@@ -1,5 +1,5 @@
-/* style.css - ARCHITETTURA DEFINITIVA: PERGAMENA RUOTATA E FULCRO GRAVITAZIONALE */
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght=0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+/* style.css - ARCHITETTURA DEFINITIVA: SCROTTOIO ORIZZONTALE E FULCRO GRAVITAZIONALE */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
 /* --- 1. BASE: LA TUA PERGAMENA RUOTATA DI 90° --- */
 .stApp { 
@@ -38,8 +38,6 @@
     font-family: 'Playfair Display', serif;
     font-weight: 600;
     color: rgba(62, 39, 35, 0.2); /* Molto trasparente */
-    
-    /* BLOCO SELEZIONE: Quello che avevi notato tu! */
     user-select: none;
     -webkit-user-select: none;
     backface-visibility: hidden;
@@ -61,15 +59,15 @@
 /* --- 3. FILIGRANA (MEDAGLIONE RETRO - STATICO) --- */
 .filigrana-retro {
     position: fixed;
-    top: center !important;
-    left: center !important;
+    top: 50%;
+    left: 50%;
     width: 250px;
     height: 250px;
     z-index: 2; /* Sopra lo sfondo ma sotto il vortice */
     opacity: 0.35; /* Molto trasparente */
     
-    /* Applichiamo la stessa rotazione della pergamena */
-    transform: rotate(90deg); 
+    /* Centramento e rotazione per allinearsi */
+    transform: translate(-50%, -50%) rotate(90deg); 
     mix-blend-mode: overlay; /* Si fonde con la texture della carta */
 }
 
@@ -86,7 +84,7 @@
     perspective: 1000px;
     width: 300px;
     height: 300px;
-    margin: 50px auto;
+    margin: -150px auto 50px auto; /* Sollevato sopra il modulo */
     /* Effetto 'Salto' 3D rispetto alla pergamena */
     filter: drop-shadow(0px 20px 40px rgba(0,0,0,0.6));
 }
@@ -123,7 +121,7 @@
     to { transform: rotateY(360deg); }
 }
 
-/* --- 5. PERGAMENA DEDICA E TITOLI --- */
+/* --- 5. PERGAMENA ORIZZONTALE E MODULO --- */
 .titolo-id {
     font-family: 'Playfair Display', serif;
     color: #3e2723;
@@ -134,17 +132,29 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
-.pergamena-dedica {
+.pergamena-modulo {
     background: rgba(255, 253, 248, 0.95);
-    padding: 40px;
+    padding: 60px 40px; /* Più spazio in orizzontale */
     border-radius: 15px;
     border: 1px solid #d7ccc8;
-    max-width: 650px;
+    max-width: 800px; /* Più largo per lo stile orizzontale */
     margin: 40px auto;
-    text-align: center;
+    text-align: left; /* Testo allineato a sinistra */
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     z-index: 11;
+}
+
+/* Stilizzazione dei campi di input e pulsanti */
+[data-testid="stTextInput"], [data-testid="stButton"] {
+    margin-bottom: 25px;
+}
+
+[data-testid="stButton"] button {
+    background-color: #8d6e63 !important;
+    color: #fff !important;
+    font-family: 'EB Garamond', serif !important;
+    border-radius: 5px;
 }
 
 .firma-fosforino {
