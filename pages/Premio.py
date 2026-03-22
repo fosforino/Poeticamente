@@ -1,10 +1,11 @@
 import streamlit as st
 
 def show():
+    # Titolo della pagina
     st.markdown("<h1 style='text-align: center; color: #3e2723; font-family: \"Playfair Display\";'>Il Tuo Riconoscimento</h1>", unsafe_allow_html=True)
     st.markdown("---")
 
-    # --- MOTORE 3D CON NOMI FILE ALLINEATI A GITHUB ---
+    # --- HTML MEDAGLIONE 3D ---
     st.markdown("""
         <div class="medaglione-3d-container">
             <div class="card-3d">
@@ -21,7 +22,7 @@ def show():
         </div>
     """, unsafe_allow_html=True)
 
-    # --- PERGAMENA DEDICA ---
+    # --- HTML PERGAMENA ---
     st.markdown("""
         <div class="pergamena-dedica">
             <p style="font-size: 1.3rem; line-height: 1.8; color: #5d4037;">
