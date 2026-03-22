@@ -11,7 +11,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {
     background-color: transparent !important;
 }
 
-/* 2. KILLER DEI BLOCCHI BIANCHI */
+/* 2. KILLER DEI BLOCCHI BIANCHI (TRASPARENZA) */
 [data-testid="stVerticalBlock"], 
 [data-testid="stHeader"], 
 div[class*="st-emotion-cache"] {
@@ -19,6 +19,14 @@ div[class*="st-emotion-cache"] {
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
+}
+
+/* --- NUOVO: CUCITURA PER ICONE NITIDE --- */
+/* Questa regola dice: "Sii trasparente ovunque, TRANNE che sulle immagini" */
+[data-testid="stImage"] img {
+    opacity: 1 !important;
+    filter: none !important;
+    background-color: transparent !important;
 }
 
 /* 3. TESTO (Inchiostro scuro) */
