@@ -1,4 +1,4 @@
-/* style.css */
+/* style.css - Versione Finale: Login Minimal + Premio 3D Fronte-Retro */
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
 /* Sfondo carta globale */
@@ -9,7 +9,7 @@
     font-family: 'EB Garamond', serif !important; 
 }
 
-/* SFONDO IMMERSIVO - Nessun riquadro, logo a destra */
+/* SFONDO IMMERSIVO - Logo a destra, zero riquadri */
 [data-testid="stAppViewContainer"] {
     background-image: url("https://raw.githubusercontent.com/fosforino/Poeticamente/main/Poeticamente.png") !important;
     background-attachment: fixed;
@@ -18,74 +18,132 @@
     background-size: 115% auto !important;
 }
 
-/* Header trasparente */
+/* Header e Navigazione silenziati */
 [data-testid="stHeader"], .main { background: transparent !important; }
 header { visibility: hidden; }
 [data-testid="stSidebarNav"] { display: none; }
 
-/* TITOLO "ID" MINIMALISTA */
+/* TITOLO "ID" - Elegante e distanziato */
 .titolo-id {
     font-family: 'Playfair Display', serif;
     color: #3e2723;
     text-align: left !important;
     margin-bottom: 20px;
-    margin-top: 40px;
+    margin-top: 50px;
     font-size: 3.5rem;
-    letter-spacing: 8px;
+    letter-spacing: 10px;
     text-shadow: 2px 2px 4px rgba(255, 252, 240, 0.8);
 }
 
-/* --- FORM DINAMICI STABILIZZATI (No tremolio) --- */
+/* --- FORM DINAMICI ULTRA-CORTI (Effetto Scomparsa) --- */
 div[data-testid="stTextInput"] {
-    transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
-    width: 250px !important; 
+    transition: width 0.7s cubic-bezier(0.19, 1, 0.22, 1) !important;
+    width: 120px !important; /* Molto stretto a riposo per liberare lo sfondo */
     margin-bottom: 10px !important;
-    min-height: 85px !important; /* Blocca l'altezza per evitare tremolii verticali */
+    min-height: 85px !important; /* Stabilità verticale anti-tremolio */
 }
 
-/* Si espande SOLO quando ci clicchi (focus), evita il ballo del mouse al passaggio */
+/* Espansione al passaggio o al click */
+div[data-testid="stTextInput"]:hover,
 div[data-testid="stTextInput"]:focus-within {
     width: 450px !important; 
 }
 
-/* Stile interno dell'input */
+/* Stile interno dei campi (Linee sottili) */
 .stTextInput input {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
     border: none !important;
-    border-bottom: 1px solid #3e2723 !important;
+    border-bottom: 1px solid rgba(62, 39, 35, 0.3) !important;
     border-radius: 0px !important;
     color: #3e2723 !important;
+    transition: background-color 0.4s ease !important;
 }
 
 .stTextInput input:focus {
     background-color: rgba(255, 255, 255, 0.8) !important;
+    border-bottom: 1px solid #3e2723 !important;
 }
 
-/* Checkbox trasparente */
-.stCheckbox { background: transparent !important; }
+/* Checkbox e Button */
+.stCheckbox { background: transparent !important; opacity: 0.8; }
+div.stButton > button {
+    border-radius: 0px !important;
+    border: 1px solid #3e2723 !important;
+    background-color: transparent !important;
+    color: #3e2723 !important;
+    transition: all 0.3s !important;
+}
+div.stButton > button:hover {
+    background-color: #3e2723 !important;
+    color: #fdf5e6 !important;
+}
 
-/* --- SEZIONE PREMIO 3D --- */
+/* --- NUOVO MEDAGLIONE FRONTE-RETRO (Il Sandwich 3D) --- */
 .medaglione-3d-container {
-    perspective: 1000px;
+    perspective: 1000px; /* Crea la profondità 3D */
     width: 300px;
     height: 300px;
-    margin: 40px auto;
+    margin: 50px auto;
+}
+
+.card-3d {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d; /* Mantiene gli elementi figli in 3D */
+    animation: rotazione-totale 12s linear infinite; /* Rotazione continua */
+}
+
+.faccia {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Nasconde il retro quando è girato */
+    border-radius: 50%; /* Medaglione tondo */
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 8px solid #b87333; /* Bordo Bronzo solido */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); /* Ombra profonda */
 }
-.medaglione-bronzo-3d {
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    border: 8px solid #b87333; 
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    animation: rotazione-medaglione 15s linear infinite;
+
+/* FACCIA DAVANTI: Mostra il Logo */
+.fronte {
+    background: #fdf5e6; /* Sfondo chiaro per far risaltare il logo */
+    transform: rotateY(0deg); /* Posizione iniziale */
+    overflow: hidden;
 }
-@keyframes rotazione-medaglione {
+.fronte img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* FACCIA DIETRO: Mostra la Firma */
+.retro {
+    /* Gradiente metallico per simulare il bronzo spazzolato */
+    background: linear-gradient(145deg, #b87333 0%, #a1887f 50%, #8d5524 100%);
+    transform: rotateY(180deg); /* Ruotata di 180 gradi di base */
+    color: #fdf5e6;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Specchiamo il testo perché il retro nasce 'al contrario' */
+.testo-retro {
+    transform: scaleX(-1); 
+    letter-spacing: 2px;
+}
+
+@keyframes rotazione-totale {
     from { transform: rotateY(0deg); }
     to { transform: rotateY(360deg); }
 }
+
+/* --- PERGAMENA DEDICA (Inalterata) --- */
 .pergamena-dedica {
     background: rgba(255, 253, 248, 0.95);
     padding: 40px;
